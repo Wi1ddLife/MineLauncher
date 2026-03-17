@@ -1,4 +1,4 @@
-# MineLauncher
+# ⛏️ MineLauncher
 
 A custom **Minecraft launcher** built with a focus on simplicity, customization, and a clean modern interface.
 MineLauncher allows players to easily launch Minecraft with **Fabric modpacks**, manage installations, and log in using a **real Microsoft account**.
@@ -7,7 +7,7 @@ This project was created as a custom launcher experiment combining modern UI des
 
 ---
 
-## Features
+## ⚙️ Features
 
 * Microsoft account authentication
 * Fabric mod loader support
@@ -19,7 +19,7 @@ This project was created as a custom launcher experiment combining modern UI des
 
 ---
 
-## Installation
+## ⬇️ Installation
 
 1. Go to the **Releases** page of this repository.
 2. Download the latest `.exe` build.
@@ -31,7 +31,7 @@ Download here:
 
 ---
 
-## YouTube
+## 🎥 YouTube
 
 Check out my channel :D :
 
@@ -39,12 +39,12 @@ Check out my channel :D :
 
 ---
 
-## Disclaimer
+## ⚠️ Disclaimer
 
 This project is not affiliated with Mojang Studios or Microsoft.
 
 ---
 
-## License
+## 📃 License
 
 MIT License
