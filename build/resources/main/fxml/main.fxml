@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.minelauncher.ui.controllers.MainController"
+            styleClass="root-pane"
+            prefWidth="1300" prefHeight="800">
+
+    <!-- TOP BAR -->
+    <top>
+        <HBox styleClass="top-bar" spacing="14" alignment="CENTER_LEFT">
+            <padding><Insets top="0" right="22" bottom="0" left="22"/></padding>
+
+            <Label text="⛏  MineLauncher" styleClass="logo-label"/>
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox fx:id="userInfoBox" styleClass="user-info-box" spacing="10"
+                  alignment="CENTER" visible="false" managed="false">
+                <ImageView fx:id="avatarImage" fitWidth="32" fitHeight="32" styleClass="avatar-image"/>
+                <Label fx:id="usernameLabel" styleClass="username-label" text="Player"/>
+                <Button fx:id="logoutButton" styleClass="btn-secondary" text="Logout"
+                        onAction="#handleLogout" style="-fx-font-size:11px; -fx-padding:4 10;"/>
+            </HBox>
+
+            <Button fx:id="loginButton" styleClass="btn-microsoft"
+                    text="Sign in with Microsoft" onAction="#handleMicrosoftLogin"/>
+        </HBox>
+    </top>
+
+    <!-- BODY -->
+    <center>
+        <SplitPane fx:id="mainSplitPane" dividerPositions="0.20" styleClass="main-split">
+
+            <!-- ── SIDEBAR ───────────────────────────────────────────────── -->
+            <VBox styleClass="sidebar" minWidth="200" maxWidth="260">
+                <padding><Insets top="20" right="0" bottom="16" left="0"/></padding>
+
+                <Label text="INSTANCES" styleClass="sidebar-section-label"/>
+
+                <ScrollPane styleClass="sidebar-scroll" VBox.vgrow="ALWAYS"
+                            fitToWidth="true" hbarPolicy="NEVER">
+                    <VBox fx:id="instanceListContainer" styleClass="instance-list" spacing="2">
+                        <padding><Insets top="2" right="8" bottom="4" left="8"/></padding>
+                    </VBox>
+                </ScrollPane>
+
+                <VBox spacing="6">
+                    <padding><Insets top="8" right="8" bottom="0" left="8"/></padding>
+                    <Button text="＋  New Instance" styleClass="btn-primary, btn-full-width"
+                            onAction="#handleNewInstance" maxWidth="Infinity"/>
+                </VBox>
+
+                <Separator styleClass="sidebar-separator" style="-fx-padding:10 0;"/>
+
+                <VBox spacing="3">
+                    <padding><Insets top="4" right="8" bottom="0" left="8"/></padding>
+                    <Button fx:id="navMods"     text="🧩  Mods"        styleClass="nav-button" onAction="#handleNavMods"     maxWidth="Infinity"/>
+                    <Button fx:id="navSkins"    text="👤  Skins &amp; Capes" styleClass="nav-button" onAction="#handleNavSkins"    maxWidth="Infinity"/>
+                    <Button fx:id="navSettings" text="⚙  Settings"    styleClass="nav-button" onAction="#handleNavSettings" maxWidth="Infinity"/>
+                </VBox>
+            </VBox>
+
+            <!-- ── MAIN TABS ─────────────────────────────────────────────── -->
+            <TabPane fx:id="mainTabPane" styleClass="main-tab-pane"
+                     tabClosingPolicy="UNAVAILABLE">
+
+                <!-- INSTANCE TAB -->
+                <Tab text="Instance" fx:id="instanceTab">
+                    <BorderPane styleClass="content-pane">
+                        <center>
+                            <VBox fx:id="instanceOverviewPane" styleClass="instance-overview"
+                                  spacing="22" alignment="TOP_CENTER">
+                                <padding><Insets top="36" right="40" bottom="40" left="40"/></padding>
+
+                                <VBox fx:id="noInstancePane" styleClass="empty-state"
+                                      alignment="CENTER" spacing="16">
+                                    <Label text="⛏" styleClass="empty-state-icon"/>
+                                    <Label text="No Instance Selected" styleClass="empty-state-title"/>
+                                    <Label text="Create a new instance or select one from the sidebar."
+                                           styleClass="empty-state-subtitle" wrapText="true"/>
+                                    <Button text="＋  Create Instance" styleClass="btn-primary"
+                                            onAction="#handleNewInstance"/>
+                                </VBox>
+
+                                <VBox fx:id="instanceDetailPane" styleClass="instance-detail"
+                                      spacing="22" visible="false" managed="false">
+
+                                    <HBox spacing="20" alignment="CENTER_LEFT">
+                                        <VBox styleClass="instance-icon-box" alignment="CENTER">
+                                            <Label fx:id="instanceIconLabel" text="🌍"
+                                                   styleClass="instance-icon-large"/>
+                                        </VBox>
+                                        <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                            <Label fx:id="instanceNameLabel" text="Instance"
+                                                   styleClass="instance-title"/>
+                                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                                <Label fx:id="instanceVersionBadge"
+                                                       styleClass="badge-version" text="1.21.1"/>
+                                                <Label fx:id="instanceFabricBadge"
+                                                       styleClass="badge-fabric" text="Fabric"
+                                                       visible="false" managed="false"/>
+                                            </HBox>
+                                            <Label fx:id="instanceModCountLabel"
+                                                   styleClass="instance-subtitle" text="0 mods"/>
+                                        </VBox>
+                                        <VBox spacing="8" alignment="TOP_RIGHT">
+                                            <Button fx:id="launchButton" text="▶  LAUNCH"
+                                                    styleClass="btn-launch" onAction="#handleLaunch"/>
+                                            <HBox spacing="6">
+                                                <Button text="Edit"   styleClass="btn-secondary" onAction="#handleEditInstance"/>
+                                                <Button text="Delete" styleClass="btn-danger"    onAction="#handleDeleteInstance"/>
+                                            </HBox>
+                                        </VBox>
+                                    </HBox>
+
+                                    <VBox fx:id="progressBox" visible="false" managed="false" spacing="6">
+                                        <Label fx:id="progressLabel" text="Preparing..."
+                                               styleClass="progress-label"/>
+                                        <ProgressBar fx:id="progressBar" progress="0"
+                                                     maxWidth="Infinity" styleClass="launch-progress"/>
+                                    </VBox>
+
+                                    <Separator/>
+
+                                    <VBox spacing="12">
+                                        <HBox alignment="CENTER_LEFT" spacing="12">
+                                            <Label text="Installed Mods" styleClass="section-title"/>
+                                            <Region HBox.hgrow="ALWAYS"/>
+                                            <Button text="＋  Add Mod" styleClass="btn-secondary"
+                                                    onAction="#handleAddMod"/>
+                                        </HBox>
+                                        <VBox fx:id="modListContainer" styleClass="mod-list" spacing="4">
+                                            <Label fx:id="noModsLabel"
+                                                   text="No mods installed. Click 'Add Mod' to browse Modrinth."
+                                                   styleClass="empty-mods-label"/>
+                                        </VBox>
+                                    </VBox>
+                                </VBox>
+                            </VBox>
+                        </center>
+                    </BorderPane>
+                </Tab>
+
+                <!-- MODS TAB -->
+                <Tab text="Mods" fx:id="modsTab">
+                    <BorderPane styleClass="content-pane">
+                        <top>
+                            <VBox styleClass="mods-search-header" spacing="12">
+                                <padding><Insets top="20" right="20" bottom="14" left="20"/></padding>
+                                <Label text="Browse Modrinth" styleClass="page-title"/>
+                                <HBox spacing="10">
+                                    <TextField fx:id="modSearchField" promptText="Search mods..."
+                                               styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                                    <Button text="Search" styleClass="btn-primary" onAction="#handleModSearch"/>
+                                    <ComboBox fx:id="modLoaderFilter" promptText="Loader"
+                                              styleClass="combo-box-styled" prefWidth="120"/>
+                                    <ComboBox fx:id="modVersionFilter" promptText="MC Version"
+                                              styleClass="combo-box-styled" prefWidth="130"/>
+                                </HBox>
+                                <Label fx:id="modSearchStatus" styleClass="search-status" text=""/>
+                            </VBox>
+                        </top>
+                        <center>
+                            <ScrollPane fitToWidth="true" styleClass="mod-scroll" hbarPolicy="NEVER">
+                                <VBox fx:id="modResultsContainer" styleClass="mod-results" spacing="10">
+                                    <padding><Insets top="12" right="20" bottom="20" left="20"/></padding>
+                                </VBox>
+                            </ScrollPane>
+                        </center>
+                        <bottom>
+                            <HBox styleClass="pagination-bar" spacing="10" alignment="CENTER">
+                                <padding><Insets top="10" bottom="10"/></padding>
+                                <Button fx:id="prevPageBtn" text="◀  Prev"  styleClass="btn-secondary" onAction="#handlePrevPage" disable="true"/>
+                                <Label  fx:id="pageLabel"   text="Page 1"   styleClass="page-label"/>
+                                <Button fx:id="nextPageBtn" text="Next  ▶"  styleClass="btn-secondary" onAction="#handleNextPage" disable="true"/>
+                            </HBox>
+                        </bottom>
+                    </BorderPane>
+                </Tab>
+
+                <!-- SKINS TAB -->
+                <Tab text="Skins" fx:id="skinsTab">
+                    <VBox fx:id="skinEditorContainer" styleClass="content-pane"/>
+                </Tab>
+
+                <!-- SETTINGS TAB -->
+                <Tab text="Settings" fx:id="settingsTab">
+                    <ScrollPane fitToWidth="true" styleClass="settings-scroll">
+                        <VBox styleClass="settings-pane" spacing="22">
+                            <padding><Insets top="28" right="40" bottom="40" left="40"/></padding>
+                            <Label text="Settings" styleClass="page-title"/>
+
+                            <VBox styleClass="settings-section" spacing="14">
+                                <Label text="JAVA" styleClass="settings-section-title"/>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label text="Java Path:" styleClass="settings-label" minWidth="130"/>
+                                    <TextField fx:id="javaPathField" styleClass="settings-field" HBox.hgrow="ALWAYS"/>
+                                    <Button text="Auto-detect" styleClass="btn-secondary" onAction="#handleAutoDetectJava"/>
+                                </HBox>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label text="Min Memory (MB):" styleClass="settings-label" minWidth="130"/>
+                                    <TextField fx:id="minMemField" styleClass="settings-field" prefWidth="100"/>
+                                </HBox>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label text="Max Memory (MB):" styleClass="settings-label" minWidth="130"/>
+                                    <TextField fx:id="maxMemField" styleClass="settings-field" prefWidth="100"/>
+                                </HBox>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label text="Extra JVM Args:" styleClass="settings-label" minWidth="130"/>
+                                    <TextField fx:id="jvmArgsField" styleClass="settings-field" HBox.hgrow="ALWAYS"/>
+                                </HBox>
+                            </VBox>
+
+                            <VBox styleClass="settings-section" spacing="14">
+                                <Label text="LAUNCHER" styleClass="settings-section-title"/>
+                                <CheckBox fx:id="closeOnLaunchCheck"
+                                          text="Close launcher when game starts"
+                                          styleClass="settings-checkbox"/>
+                            </VBox>
+
+                            <Button text="Save Settings" styleClass="btn-primary" onAction="#handleSaveSettings"/>
+                        </VBox>
+                    </ScrollPane>
+                </Tab>
+
+                <!-- LOG TAB -->
+                <Tab text="Log" fx:id="logTab">
+                    <VBox styleClass="log-pane" spacing="10">
+                        <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Game Log" styleClass="page-title"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Clear"    styleClass="btn-secondary" onAction="#handleClearLog"/>
+                            <Button text="Copy All" styleClass="btn-secondary" onAction="#handleCopyLog"/>
+                        </HBox>
+                        <TextArea fx:id="logTextArea" styleClass="log-area"
+                                  VBox.vgrow="ALWAYS" editable="false" wrapText="true"/>
+                    </VBox>
+                </Tab>
+            </TabPane>
+        </SplitPane>
+    </center>
+</BorderPane>
